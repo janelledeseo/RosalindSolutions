@@ -5,6 +5,12 @@ URL: https://rosalind.info/problems/dna/
 Given: A DNA string s of length at most 1000 nt
 Return: Four integers (separated by spaces) counting the respective number of times that the symbols 'A', 'C', 'G', and 'T' occur in s
 """
+def count_DNA(string):
+    countA = string.count("A")
+    countC = string.count("C")
+    countG = string.count("G")
+    countT = string.count("T")
+    return countA, countC, countG, countT
 
 
 
@@ -15,6 +21,8 @@ URL: https://rosalind.info/problems/rna/
 Given: A DNA string t having length at most 1000 nt
 Return: The transcribed RNA string of t
 """
+def dna2rna(string):
+    return string.replace('T','U')
 
 
 
