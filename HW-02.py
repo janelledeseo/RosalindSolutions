@@ -33,6 +33,10 @@ URL: https://rosalind.info/problems/revc/
 Given: A DNA string s of length at most 1000 bp
 Return: The reverse complement of sc of s
 """
+def rev_comp(string):
+  complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+  reverse_complement = ''.join([complement[base] for base in string[::-1]])
+  return reverse_complement
 
 
 
@@ -53,6 +57,13 @@ URL: https://rosalind.info/problems/hamm/
 Given: Two DNA strings s and t of equal length (not exceeding 1 kbp)
 Return: The Hamming distance dH(s,t)
 """
+def hamm(s, t):
+    distance = 0
+    assert len(s) == len(t)
+    for i in range(len(s)):
+        if s[i] != t[i]:
+            distance += 1
+    return distance
 
 
 
