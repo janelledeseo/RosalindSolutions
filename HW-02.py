@@ -47,6 +47,15 @@ URL: https://rosalind.info/problems/gc/
 Given: At most 10 DNA strings in FASTA format (of length at most 1 kbp each)
 Return: The ID of the string having the highest GC-content, followed by the GC-content of that string
 """
+def gc(strings):
+    gc_contents = {}
+    for k, v in strings.items():
+        gc_content = (v.count("G") + v.count("C")) / len(v)
+        gc_contents[k] = gc_content
+    gc_contents = sorted(gc_contents.items(), key=lambda d: d[1], reverse=True) # key=lambda d: d[1] sorts dictionary items by their second element (ID, GC content)
+    highest_gc_id, highest_gc_content = gc_contents[0]
+    highest_gc_percentage = highest_gc_content * 100 
+    return highest_gc_id, highest_gc_percentage
 
 
 
