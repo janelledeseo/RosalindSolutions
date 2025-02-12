@@ -66,9 +66,9 @@ URL: https://rosalind.info/problems/hamm/
 Given: Two DNA strings s and t of equal length (not exceeding 1 kbp)
 Return: The Hamming distance dH(s,t)
 """
+# The Hamming distance between two strings is the number of places in which the two strings differ
 def hamm(s, t):
     distance = 0
-    assert len(s) == len(t)
     for i in range(len(s)):
         if s[i] != t[i]:
             distance += 1
@@ -83,8 +83,9 @@ URL: https://rosalind.info/problems/prot/
 Given: An RNA string s corresponding to a strand of mRNA (of length at most 10 kbp)
 Return: The protein string encoded by s
 """
+# * = stop codon
 def prot(string):
-    pattern = {"UUU": "F", "CUU": "L", "AUU": "I", "GUU": "V",
+    codons = {"UUU": "F", "CUU": "L", "AUU": "I", "GUU": "V",
            "UUC": "F", "CUC": "L", "AUC": "I", "GUC": "V",
            "UUA": "L", "CUA": "L", "AUA": "I", "GUA": "V",
            "UUG": "L", "CUG": "L", "AUG": "M", "GUG": "V",
@@ -100,6 +101,6 @@ def prot(string):
            "UGC": "C", "CGC": "R", "AGC": "S", "GGC": "G",
            "UGA": "*", "CGA": "R", "AGA": "R", "GGA": "G",
            "UGG": "W", "CGG": "R", "AGG": "R", "GGG": "G"}
-    rst = ''.join([pattern[string[i:i+3]] for i in range(0, len(string), 3)])
-    return rst[:rst.index("*")]
+    rst = ''.join([codons[string[i:i+3]] for i in range(0, len(string), 3)])
+    return rst[:rst.index("*")] # return only the portion of the protein sequence before the stop codon
     
