@@ -14,14 +14,6 @@ def subs(string1, string2):
             loc.append(i+1)
     return loc
 
-if __name__ == "__main__":
-    with open("../data/rosalind_subs.txt", 'r') as f:
-        string1 = f.readline().strip()
-        string2 = f.readline().strip()
-    loc = subs(string1, string2)
-    for i in loc:
-        print(i, end=" ")
-
 
 
 """
