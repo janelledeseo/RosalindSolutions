@@ -45,6 +45,48 @@ URL: http://rosalind.info/problems/splc/
 Given: A DNA string s (of length at most 1 kbp) and a collection of substrings of s acting as introns. All strings are given in FASTA format.
 Return: A protein string resulting from transcribing and translating the exons of s. (Note: Only one solution will exist for the dataset provided.)
 """
+coding_table = {
+    'UCU': 'S', 'UCC': 'S', 'UCA': 'S', 'UCG': 'S', 
+    'UUU': 'F', 'UUC': 'F',
+    'UUA': 'L', 'UUG': 'L', 'CUU': 'L', 'CUC': 'L', 'CUA': 'L', 'CUG': 'L',
+    'UAU': 'Y', 'UAC': 'Y',
+    'UGU': 'C', 'UGC': 'C',
+    'UGG': 'W', 
+    'CCU': 'P', 'CCC': 'P', 'CCA': 'P', 'CCG': 'P',
+    'CAU': 'H', 'CAC': 'H',
+    'CAA': 'Q', 'CAG': 'Q',
+    'CGU': 'R', 'CGC': 'R', 'CGA': 'R', 'CGG': 'R', 'AGA': 'R', 'AGG': 'R',
+    'AUU': 'I', 'AUC': 'I', 'AUA': 'I',
+    'AUG': 'M', 
+    'ACU': 'T', 'ACC': 'T', 'ACA': 'T', 'ACG': 'T', 
+    'AAU': 'N', 'AAC': 'N', 
+    'AAA': 'K', 'AAG': 'K',
+    'GUU': 'V', 'GUC': 'V', 'GUA': 'V', 'GUG': 'V',
+    'GCU': 'A', 'GCC': 'A', 'GCA': 'A', 'GCG': 'A',
+    'GAU': 'D', 'GAC': 'D',
+    'GAA': 'E', 'GAG': 'E',
+    'GGU': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
+    'UAA': '*', 'UAG': '*', 'UGA': '*'  # Stop codons
+}
+
+def RNA_splicing(dna_string, introns):
+    # Remove introns
+    for intron in introns:
+        dna_string = dna_string.replace(intron, "")
+
+    # Transcribe DNA to RNA
+    rna_string = dna_string.replace("T", "U")
+
+    # Translate RNA to Protein
+    protein_string = ""
+    for i in range(0, len(rna_string) - 2, 3):
+        codon = rna_string[i:i+3]
+        amino_acid = coding_table.get(codon, '')
+        protein_string += amino_acid
+        if amino_acid == '*':
+            break
+
+    return protein_string
 
 
 
@@ -55,6 +97,19 @@ URL: http://rosalind.info/problems/revp/
 Given: A DNA string of length at most 1 kbp in FASTA format.
 Return: The position and length of every reverse palindrome in the string having length between 4 and 12. You may return these pairs in any order.
 """
+# Return the reverse complement of a DNA sequence
+def switch(string):
+    complement = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+    return ''.join(complement[base] for base in reversed(string))
+
+# Find and print reverse palindromic sequences of length 4 to 12
+def palindrome(string):
+    for i in range(len(string)):
+        for j in range(4, 13):  
+            if i + j <= len(string):  # Ensure valid substring
+                substring = string[i:i+j]
+                if substring == switch(substring):  # Check if reverse complement matches
+                    print(i + 1, j)  # Output 1-based position and length
 
 
 
