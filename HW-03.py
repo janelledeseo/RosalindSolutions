@@ -120,6 +120,22 @@ URL: http://rosalind.info/problems/tran/
 Given: Two DNA strings s1 and s2 of equal length (at most 1 kbp).
 Return: The transition/transversion ratio R(s1,s2).
 """
+transitions = {('A', 'G'), ('G', 'A'), ('C', 'T'), ('T', 'C')}
+transversions = {('A', 'T'), ('T', 'A'), ('A', 'C'), ('C', 'A'),
+                 ('T', 'G'), ('G', 'T'), ('C', 'G'), ('G', 'C')}
+
+transition_c, transversions_c = 0, 0 # counters
+
+for a, b in zip(s1, s2):
+    if (a, b) in transitions:
+        transition_c += 1
+    elif (a, b) in transversions:
+        transversions_c += 1
+
+if transversions_c == 0:
+    print("No transversions found, ratio is undefined")
+else:
+    print(transition_c / transversions_c)
 
 
 
