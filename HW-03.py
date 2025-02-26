@@ -146,6 +146,17 @@ URL: http://rosalind.info/problems/lcsm/
 Given: A collection of k (k≤100) DNA strings of length at most 1 kbp each in FASTA format.
 Return: A longest common substring of the collection. (If multiple solutions exist, you may return any single solution.)
 """
+def shortest_seq(seq):
+    return min(seq.values(), key=len)  
+
+def shared_motif(seq):
+    s_seq = shortest_seq(seq)  # Find the shortest sequence
+    motif = set(s_seq[i:j] for i in range(len(s_seq)) for j in range(i+1, len(s_seq)+1))  # Generate all substrings
+    
+    for s in seq.values():
+        motif = {m for m in motif if m in s}  
+    
+    return max(motif, key=len)  # Find the longest substring
 
 
 
