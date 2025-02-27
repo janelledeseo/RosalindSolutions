@@ -167,47 +167,48 @@ URL:http://rosalind.info/problems/orf/
 Given: A DNA string s of length at most 1 kbp in FASTA format.
 Return: Every distinct candidate protein string that can be translated from ORFs of s. Strings can be returned in any order.
 """
-def coding(s):
-    dna_codons = {
-        "TTT": 'F', "TTC": 'F', "TTA": 'L', "TTG": 'L',
-        "TCT": 'S', "TCC": 'S', "TCA": 'S', "TCG": 'S',
-        "TAT": 'Y', "TAC": 'Y', "TGT": 'C', "TGC": 'C',
-        "TGG": 'W', "CCT": 'P', "CCC": 'P', "CCA": 'P', "CCG": 'P',
-        "CAT": 'H', "CAC": 'H', "CAA": 'Q', "CAG": 'Q',
-        "CGT": 'R', "CGC": 'R', "CGA": 'R', "CGG": 'R', "AGA": 'R', "AGG": 'R',
-        "ATT": 'I', "ATC": 'I', "ATA": 'I', "ATG": 'M',
-        "ACT": 'T', "ACC": 'T', "ACA": 'T', "ACG": 'T',
-        "AAT": 'N', "AAC": 'N', "AAA": 'K', "AAG": 'K',
-        "GTT": 'V', "GTC": 'V', "GTA": 'V', "GTG": 'V',
-        "GCT": 'A', "GCC": 'A', "GCA": 'A', "GCG": 'A',
-        "GAT": 'D', "GAC": 'D', "GAA": 'E', "GAG": 'E',
-        "GGT": 'G', "GGC": 'G', "GGA": 'G', "GGG": 'G',
-        "TAA": '*', "TAG": '*', "TGA": '*'
-    }
-    return dna_codons.get(s, '')
+dna_codons = {
+    "TTT": 'F', "TTC": 'F', "TTA": 'L', "TTG": 'L',
+    "TCT": 'S', "TCC": 'S', "TCA": 'S', "TCG": 'S',
+    "TAT": 'Y', "TAC": 'Y', "TAA": '*', "TAG": '*',
+    "TGT": 'C', "TGC": 'C', "TGA": '*', "TGG": 'W',
+    "CTT": 'L', "CTC": 'L', "CTA": 'L', "CTG": 'L',
+    "CCT": 'P', "CCC": 'P', "CCA": 'P', "CCG": 'P',
+    "CAT": 'H', "CAC": 'H', "CAA": 'Q', "CAG": 'Q',
+    "CGT": 'R', "CGC": 'R', "CGA": 'R', "CGG": 'R',
+    "ATT": 'I', "ATC": 'I', "ATA": 'I', "ATG": 'M',
+    "ACT": 'T', "ACC": 'T', "ACA": 'T', "ACG": 'T',
+    "AAT": 'N', "AAC": 'N', "AAA": 'K', "AAG": 'K',
+    "AGT": 'S', "AGC": 'S', "AGA": 'R', "AGG": 'R',
+    "GTT": 'V', "GTC": 'V', "GTA": 'V', "GTG": 'V',
+    "GCT": 'A', "GCC": 'A', "GCA": 'A', "GCG": 'A',
+    "GAT": 'D', "GAC": 'D', "GAA": 'E', "GAG": 'E',
+    "GGT": 'G', "GGC": 'G', "GGA": 'G', "GGG": 'G'
+}
 
-def switch(s):
+def reverse_complement(dna):
     dna_comps = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
-    return ''.join(dna_comps[n] for n in reversed(s))
+    return ''.join(dna_comps[n] for n in reversed(dna))
 
-def result(sequence):
-    result_list = []
-    for frame in range(3):
-        protein_seq = ''
-        for i in range(frame, len(sequence) - 2, 3):
-            codon = sequence[i:i+3]
-            protein_seq += coding(codon)
-        
-        # Extract valid protein sequences
-        start_idx = 0
-        while start_idx < len(protein_seq):
-            start_idx = protein_seq.find('M', start_idx)
-            if start_idx == -1:
-                break
-            stop_idx = protein_seq.find('*', start_idx)
-            if stop_idx != -1:
-                result_list.append(protein_seq[start_idx:stop_idx])
-            start_idx += 1  # Move forward to find next start
-    return result_list
+# Function to find proteins in a sequence
+def find_proteins(dna_sequence):
+    def extract_proteins(seq):
+        proteins = set()
+        for frame in range(3):  # Check all 3 reading frames
+            for i in range(frame, len(seq) - 2, 3):
+                if seq[i:i+3] == "ATG":  # Start codon
+                    protein = []
+                    for j in range(i, len(seq) - 2, 3):
+                        codon = seq[j:j+3]
+                        if dna_codons.get(codon) == "*":
+                            proteins.add(''.join(protein))
+                            break
+                        protein.append(dna_codons.get(codon))
+        return proteins
 
+    # Check forward and reverse strands
+    forward_proteins = extract_proteins(dna_sequence)
+    reverse_strand = reverse_complement(dna_sequence)
+    reverse_proteins = extract_proteins(reverse_strand)
 
+    return forward_proteins | reverse_proteins  # Return unique proteins
